@@ -6,7 +6,7 @@
 //      https://hgcgipbcmganempbllnbfmefckmipgoc.chromiumapp.org/
 // 3. Paste the client id below. Use "prelive" while testing, "production" when live.
 const QF = {
-  clientId: "PASTE_CLIENT_ID_HERE",
+  clientId: "fcc4aa0c-ead8-42b4-a1c2-fea66199e93e", // prelive; production has its own id,
   env: "prelive", // "prelive" | "production"
   // Request exactly the scopes your client was approved for.
   scope: "openid offline_access reading_session",
