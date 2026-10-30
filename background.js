@@ -6,10 +6,9 @@
 // - Once a day after the computer wakes: bring that tab forward.
 // - Quran.com account: keep the last verse in sync as a reading session (qf.js).
 
-importScripts("config.js", "qf.js");
+importScripts("config.js", "qf.js", "verse.js");
 
 const QURAN_MATCH = "https://quran.com/*";
-const DEFAULT_URL = "https://quran.com/1";
 
 // Delay before touching tabs, so Ecosia's "continue where you left off" has a
 // chance to restore its tabs first (lets us reuse a restored quran.com tab
@@ -24,15 +23,6 @@ const PUSH_ALARM = "qr-push"; // fallback push if the worker is stopped before t
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const withTimeout = (promise, ms) => Promise.race([promise, sleep(ms).then(() => false)]);
-
-function urlForVerse(verseKey) {
-  // verseKey looks like "2:255"
-  const match = /^(\d{1,3}):(\d{1,3})$/.exec(verseKey || "");
-  if (!match) return DEFAULT_URL;
-  // ?startingVerse= opens the whole surah positioned at that verse
-  // (plain /2/9 opens a single-verse view instead).
-  return `https://quran.com/${match[1]}?startingVerse=${match[2]}`;
-}
 
 async function getTargetUrl() {
   const { verseKey } = await chrome.storage.local.get("verseKey");

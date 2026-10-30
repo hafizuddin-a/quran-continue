@@ -125,12 +125,19 @@ function drawQr(canvas, text) {
   }
 }
 
+// The code opens quran.com at the place you last stopped, so the phone starts where this computer is.
+async function drawPhoneQr() {
+  if ($("phone-steps").hidden) return;
+  const { verseKey } = await chrome.storage.local.get("verseKey");
+  drawQr($("qr"), urlForVerse(verseKey));
+}
+
 $("phone-toggle").addEventListener("click", () => {
   const open = $("phone-steps").hidden;
   $("phone-steps").hidden = !open;
   $("phone-toggle").textContent = open ? "Hide steps" : "Show steps";
   $("phone-toggle").setAttribute("aria-expanded", String(open));
-  if (open) drawQr($("qr"), "https://quran.com");
+  drawPhoneQr();
 });
 
 $("dev").addEventListener("click", () => {
@@ -140,7 +147,10 @@ $("dev").addEventListener("click", () => {
 
 // A place synced in from your phone or another computer while the menu is open.
 chrome.storage.onChanged.addListener((changes, area) => {
-  if (area === "local" && changes.verseKey) render();
+  if (area === "local" && changes.verseKey) {
+    render();
+    drawPhoneQr();
+  }
 });
 
 render();
