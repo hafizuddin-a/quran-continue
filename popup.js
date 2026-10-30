@@ -71,6 +71,9 @@ function ago(ms) {
 
 function renderAccount(status) {
   const on = !!(status && status.signedIn);
+  // Signed in, the account does the syncing, so the Chrome sync switch isn't needed.
+  $("sync-sep").hidden = on;
+  $("sync-block").hidden = on;
   $("acct-off").hidden = on;
   $("acct-on").hidden = !on;
   if (on) {

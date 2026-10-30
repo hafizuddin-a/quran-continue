@@ -2,7 +2,7 @@
 
 Same as Quran Resume: reopens quran.com in a pinned tab at the verse where you
 last stopped (browser start, once a day after wake, Alt/Option+Shift+Q), and
-syncs between computers with Chrome sync.
+syncs between computers with Chrome sync (only while you are signed out).
 
 The difference: no phone server. Sign in with your Quran.com account and your
 place is stored as a Quran.com *reading session*, the same "continue reading"

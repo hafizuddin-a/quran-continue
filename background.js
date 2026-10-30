@@ -77,7 +77,11 @@ async function openQuran() {
 
 const SYNC_ALARM = "qr-sync-push";
 
+// Chrome sync is for people who are not signed in. Once signed in, the Quran.com
+// account carries the place to every device (other computers included), so Chrome
+// sync stands down; it picks up again if you sign out.
 async function syncIsOn() {
+  if (await qfSignedIn()) return false;
   const { syncEnabled = true } = await chrome.storage.local.get("syncEnabled");
   return syncEnabled;
 }
