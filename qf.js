@@ -154,11 +154,12 @@ async function qfApi(path, init = {}, retried = false) {
   });
   const date = Date.parse(res.headers.get("date") || "");
   if (date) await chrome.storage.local.set({ qfSkew: date - Date.now() });
-  if (res.status === 401 && !retried) {
+  const body = await res.json().catch(() => ({}));
+  // An expired token comes back as 401, 403 or 400 invalid_token depending on the gateway: refresh once and retry.
+  if (!retried && (res.status === 401 || res.status === 403 || body.type === "invalid_token")) {
     await refreshAccess();
     return qfApi(path, init, true);
   }
-  const body = await res.json().catch(() => ({}));
   if (!res.ok) throw Object.assign(new Error(body.message || String(res.status)), { status: res.status });
   return body;
 }
