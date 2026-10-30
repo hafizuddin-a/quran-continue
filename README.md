@@ -1,12 +1,12 @@
 # Quran Resume (Account)
 
 Same as Quran Resume: reopens quran.com in a pinned tab at the verse where you
-last stopped (browser start, once a day after wake, Alt/Option+Shift+Q), and
-syncs between computers with Chrome sync (only while you are signed out).
+last stopped (browser start, once a day after wake, Alt/Option+Shift+Q).
 
 The difference: no phone server. Sign in with your Quran.com account and your
 place is stored as a Quran.com *reading session*, the same "continue reading"
-place quran.com and its apps use.
+place quran.com and its apps use. That is the only sync. Without signing in, your
+place stays on this computer.
 
 ## Setup
 
@@ -21,6 +21,6 @@ place quran.com and its apps use.
 ## Files
 
 - `qf.js` sign-in (Authorization Code + PKCE), token refresh, reading-session calls
-- `background.js` startup/wake/shortcut, Chrome sync, account sync (newest wins)
+- `background.js` startup/wake/shortcut, account sync (newest wins)
 - `content.js` records the verse nearest the top of quran.com
 - `key.pem` private key behind the fixed extension id. Git-ignored; keep a backup.

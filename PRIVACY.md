@@ -6,9 +6,7 @@ own. It sends nothing over the network until you sign in with your Quran.com acc
 ## What the extension stores
 
 - **Your last verse** (for example `2:9`) and the time it was saved, in your browser's local extension
-  storage (`chrome.storage.local`) on your own device. If "Sync my place" is on (the default) and you use
-  Chrome sync, Chrome also keeps a copy in `chrome.storage.sync`, which Chrome syncs to your other signed-in
-  browsers through your Google account. Turn this off in the toolbar menu.
+  storage (`chrome.storage.local`) on your own device. Nothing else leaves your device unless you sign in.
 - **Your Quran.com sign-in tokens** (only after you sign in): an access token and a refresh token, kept in
   `chrome.storage.local` on your device. They are used only to call Quran Foundation, and are deleted when you sign
   out.

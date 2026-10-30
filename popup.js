@@ -20,11 +20,10 @@ function prettyShortcut(s) {
 }
 
 async function render() {
-  const { verseKey, wakeEnabled = true, startupEnabled = true, syncEnabled = true } =
-    await chrome.storage.local.get(["verseKey", "wakeEnabled", "startupEnabled", "syncEnabled"]);
+  const { verseKey, wakeEnabled = true, startupEnabled = true } =
+    await chrome.storage.local.get(["verseKey", "wakeEnabled", "startupEnabled"]);
   $("wake").checked = wakeEnabled;
   $("startup").checked = startupEnabled;
-  $("sync").checked = syncEnabled;
 
   // Some Chromium browsers (Ecosia, for one) do not offer the shortcuts API: hide the hint there.
   if (chrome.commands && chrome.commands.getAll) {
@@ -43,7 +42,6 @@ async function render() {
 }
 
 $("startup").addEventListener("change", (e) => chrome.storage.local.set({ startupEnabled: e.target.checked }));
-$("sync").addEventListener("change", (e) => chrome.storage.local.set({ syncEnabled: e.target.checked }));
 $("shortcut").addEventListener("click", () => {
   chrome.tabs.create({ url: "chrome://extensions/shortcuts" });
   window.close();
@@ -71,9 +69,6 @@ function ago(ms) {
 
 function renderAccount(status) {
   const on = !!(status && status.signedIn);
-  // Signed in, the account does the syncing, so the Chrome sync switch isn't needed.
-  $("sync-sep").hidden = on;
-  $("sync-block").hidden = on;
   $("acct-off").hidden = on;
   $("acct-on").hidden = !on;
   if (on) {
@@ -143,7 +138,7 @@ $("dev").addEventListener("click", () => {
   window.close();
 });
 
-// A place synced in from the phone or another computer while the menu is open.
+// A place synced in from your phone or another computer while the menu is open.
 chrome.storage.onChanged.addListener((changes, area) => {
   if (area === "local" && changes.verseKey) render();
 });

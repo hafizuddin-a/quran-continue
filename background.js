@@ -45,7 +45,6 @@ async function activate(tabId) {
 }
 
 async function openQuran() {
-  await pullFromSync();
   await withTimeout(syncWithAccount(), 2500);
   const url = await getTargetUrl();
   const existing = await chrome.tabs.query({ url: QURAN_MATCH });
@@ -69,51 +68,7 @@ async function openQuran() {
   }
 }
 
-// ---- Sync the last verse across computers (chrome.storage.sync) ----
-//
-// The newest save wins. Pushes are delayed and merged by an alarm so scrolling
-// never hits Chrome's sync write limits. Needs Chrome sync to be turned on;
-// otherwise the data simply stays on this computer.
-
-const SYNC_ALARM = "qr-sync-push";
-
-// Chrome sync is for people who are not signed in. Once signed in, the Quran.com
-// account carries the place to every device (other computers included), so Chrome
-// sync stands down; it picks up again if you sign out.
-async function syncIsOn() {
-  if (await qfSignedIn()) return false;
-  const { syncEnabled = true } = await chrome.storage.local.get("syncEnabled");
-  return syncEnabled;
-}
-
-async function pushToSync() {
-  try {
-    if (!(await syncIsOn())) return;
-    const { verseKey, savedAt = 0 } = await chrome.storage.local.get(["verseKey", "savedAt"]);
-    if (!verseKey) return;
-    const remote = await chrome.storage.sync.get(["verseKey", "savedAt"]);
-    if ((remote.savedAt || 0) >= savedAt) return;
-    await chrome.storage.sync.set({ verseKey, savedAt });
-  } catch (err) {
-    // Sync unavailable or over quota: keep working locally.
-  }
-}
-
-// Returns true if a newer place from another computer was applied.
-async function pullFromSync() {
-  try {
-    if (!(await syncIsOn())) return false;
-    const { verseKey, savedAt = 0 } = await chrome.storage.local.get(["verseKey", "savedAt"]);
-    const remote = await chrome.storage.sync.get(["verseKey", "savedAt"]);
-    if (remote.verseKey && (remote.savedAt || 0) > savedAt && remote.verseKey !== verseKey) {
-      await chrome.storage.local.set({ verseKey: remote.verseKey, savedAt: remote.savedAt });
-      return true;
-    }
-  } catch (err) {
-    // ignore
-  }
-  return false;
-}
+const SYNC_ALARM = "qr-sync-push"; // fallback push if the worker is stopped before the 3 s timer fires
 
 // ---- Quran.com account (optional, off until you sign in) ----
 //
@@ -188,8 +143,6 @@ chrome.storage.onChanged.addListener(async (changes, area) => {
   if (area === "local" && changes.verseKey) {
     pushSoon();
     if (!(await chrome.alarms.get(SYNC_ALARM))) chrome.alarms.create(SYNC_ALARM, { delayInMinutes: 0.5 });
-  } else if (area === "sync" && changes.verseKey) {
-    pullFromSync();
   }
 });
 
@@ -255,15 +208,13 @@ async function focusQuranOnce() {
   const { wakeEnabled = true, lastOpenDay } = await chrome.storage.local.get(["wakeEnabled", "lastOpenDay"]);
   if (!wakeEnabled || lastOpenDay === todayKey()) return;
   await markToday();
-  const movedOnAnotherComputer = await pullFromSync();
   await withTimeout(syncWithAccount(), 2500);
   const existing = await chrome.tabs.query({ url: QURAN_MATCH });
   let tabId;
   if (existing.length > 0) {
     // Keep the tab as it is (it already shows your place), just bring it forward.
-    // If you read further on another computer or your phone, move it to that place first.
+    // If you read further on your phone or another computer, syncWithAccount already moved it.
     tabId = existing[0].id;
-    if (movedOnAnotherComputer) await chrome.tabs.update(tabId, { url: await getTargetUrl() }); // syncWithAccount moves tabs itself
     await activate(tabId);
   } else {
     await openQuran();
@@ -287,7 +238,7 @@ chrome.idle.onStateChanged.addListener(async (state) => {
 // Sleep without a lock screen: the 1-minute timer stops while the computer
 // sleeps, so a gap between ticks means it just woke up.
 chrome.alarms.onAlarm.addListener(async (alarm) => {
-  if (alarm.name === SYNC_ALARM) return Promise.all([pushToSync(), syncWithAccount()]);
+  if (alarm.name === SYNC_ALARM) return syncWithAccount();
   if (alarm.name !== TICK_ALARM) return;
   const { lastTick } = await chrome.storage.local.get("lastTick");
   const now = Date.now();
