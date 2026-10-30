@@ -1,0 +1,40 @@
+{
+  "manifest_version": 3,
+  "name": "Quran Resume (Account)",
+  "version": "0.1.0",
+  "description": "Opens quran.com as a pinned tab at the verse where you last stopped, and keeps your place in sync through your Quran.com account.",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnBVQftUMVX4dtQ/hni2MFYCiQcH2XB/M4CjkJZNg2bcng3tMw4Nin2U1cIXi8ZUzId7FwUwofEU0M3rd/oFSBHekkHfzYTQwWTmW2EebJYc2L/hiTjhAUyvtHjD/Hxvn7FdZIdeI70EKYSyK0IkWPUCyjpXJXgQzBeNGSvMOFLnqZBhhzVHKXzS/Bzqlrlc38uNKd4E/ZQbaw+Mk3QbFBtQXhJdM4PBPw/AnNInZv1ppAgnZ4PRU0bAr175oZYc05AkksuoNzLfkKxgKbdslyfpg5XQzWFRvQi0ZxmdAn352aL4X5/QpRlcfzNoKZMCI8UsPgN19glrc5psPJN3vfwIDAQAB",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "permissions": ["storage", "scripting", "idle", "alarms", "identity"],
+  "host_permissions": [
+    "https://quran.com/*",
+    "https://prelive-oauth2.quran.foundation/*",
+    "https://oauth2.quran.foundation/*",
+    "https://apis-prelive.quran.foundation/*",
+    "https://apis.quran.foundation/*"
+  ],
+  "web_accessible_resources": [
+    { "resources": ["icons/icon32.png"], "matches": ["https://quran.com/*"] }
+  ],
+  "options_ui": { "page": "options.html", "open_in_tab": false },
+  "background": { "service_worker": "background.js" },
+  "content_scripts": [
+    { "matches": ["https://quran.com/*"], "js": ["content.js"], "run_at": "document_idle" }
+  ],
+  "action": {
+    "default_title": "Quran Resume (Account)",
+    "default_icon": { "16": "icons/icon16.png", "32": "icons/icon32.png" },
+    "default_popup": "popup.html"
+  },
+  "commands": {
+    "open-quran": {
+      "suggested_key": { "default": "Alt+Shift+Q" },
+      "description": "Open the Quran at your last verse"
+    }
+  }
+}

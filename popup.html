@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Quran Resume (Account)</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <img src="icons/icon32.png" alt="">
+    <h1>Quran Resume</h1>
+  </header>
+
+  <section class="last">
+    <div class="label">Last stopped at</div>
+    <div class="verse" id="verse">Not saved yet</div>
+    <div class="sub" id="verse-sub">Start reading on quran.com and your place is saved automatically.</div>
+    <div class="actions"><button class="primary" id="open">Open Quran</button><button class="hint" id="shortcut" title="Change the shortcut"></button></div>
+  </section>
+
+  <hr>
+
+  <section>
+    <div class="label">Open the Quran at your last verse</div>
+    <label class="row">
+      <span>When Chrome starts</span>
+      <span class="toggle"><input type="checkbox" id="startup"><span class="track"></span><span class="knob"></span></span>
+    </label>
+    <label class="row">
+      <span>
+        When your computer wakes
+        <small>The first wake each day, while Chrome is open.</small>
+      </span>
+      <span class="toggle"><input type="checkbox" id="wake"><span class="track"></span><span class="knob"></span></span>
+    </label>
+  </section>
+
+  <hr>
+
+  <section>
+    <div class="label">Across your computers</div>
+    <label class="row">
+      <span>
+        Sync my place
+        <small>Uses Chrome sync.</small>
+      </span>
+      <span class="toggle"><input type="checkbox" id="sync"><span class="track"></span><span class="knob"></span></span>
+    </label>
+  </section>
+
+  <hr>
+
+  <section id="account">
+    <div class="label">Your Quran.com account</div>
+    <div class="row" id="acct-off">
+      <span>Keep your place in sync<small>Share it with Quran.com on your phone and other computers.</small></span>
+      <button class="primary" id="signin">Sign in</button>
+    </div>
+    <div class="row" id="acct-on" hidden>
+      <span>Signed in as <b id="acct-user"></b><small id="acct-sub"></small></span>
+      <button class="secondary" id="signout">Sign out</button>
+    </div>
+    <p class="msg" id="acct-msg" hidden></p>
+  </section>
+
+  <hr>
+
+  <button class="item" id="dev">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z" fill="currentColor"/></svg>
+    <span>Talk to the developer<small>Sincerely, @madebyhafiz</small></span>
+  </button>
+  <script src="surahs.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
