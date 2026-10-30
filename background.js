@@ -1,4 +1,4 @@
-// Quran Resume (Account) - background service worker
+// Quran Continue - background service worker
 //
 // - Browser startup: open (or reuse) a pinned quran.com tab at the last saved
 //   verse and make it the active tab. Session restore may finish after this runs

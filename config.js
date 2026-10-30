@@ -1,7 +1,7 @@
 // Quran Foundation OAuth settings. The client is a public one (Authorization
 // Code + PKCE, no secret), so nothing here is confidential.
 //
-// App: "Quran Resume Account" in the Quran Foundation Developer Console. Its redirect
+// App: "Quran Continue" in the Quran Foundation Developer Console. Its redirect
 // URI is fixed by the "key" in manifest.json:
 //   https://hgcgipbcmganempbllnbfmefckmipgoc.chromiumapp.org/
 // Use "prelive" while testing and "production" once the permissions are approved.

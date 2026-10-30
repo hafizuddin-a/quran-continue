@@ -1,4 +1,4 @@
-// Quran Resume - content script (runs on quran.com)
+// Quran Continue - content script (runs on quran.com)
 //
 // Continuously records the verse nearest the top of the screen to
 // chrome.storage.local, so the position survives however the tab is closed.
@@ -116,11 +116,11 @@ const qrIsCurrent = () => globalThis.__quranResumeInstance === QR_INSTANCE && !!
   });
 
   async function showPrompt() {
-    if (document.getElementById("quran-resume-prompt")) return;
+    if (document.getElementById("quran-continue-prompt")) return;
     const { wakeEnabled = true } = await chrome.storage.local.get("wakeEnabled");
 
     const host = document.createElement("div");
-    host.id = "quran-resume-prompt";
+    host.id = "quran-continue-prompt";
     host.style.cssText = "position:fixed;top:8px;right:16px;z-index:2147483647;";
     const root = host.attachShadow({ mode: "open" });
     const icon = chrome.runtime.getURL("icons/icon32.png");
@@ -157,10 +157,10 @@ const qrIsCurrent = () => globalThis.__quranResumeInstance === QR_INSTANCE && !!
           .link { color: #a8c7fa; border-color: #8e918f; } .link:hover { background: rgba(168,199,250,.12); }
         }
       </style>
-      <div class="card" role="dialog" aria-label="Quran Resume">
+      <div class="card" role="dialog" aria-label="Quran Continue">
         <div class="head">
           <img src="${icon}" alt="">
-          <div class="name">Quran Resume</div>
+          <div class="name">Quran Continue</div>
           <button class="close" aria-label="Close"><svg viewBox="0 0 16 16"><path d="M3.5 3.5l9 9m0-9l-9 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" fill="none"/></svg></button>
         </div>
         <p>Opened after your computer woke from sleep, once a day. It also opens whenever Chrome starts.</p>

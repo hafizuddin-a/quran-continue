@@ -1,6 +1,6 @@
 # Terms of Service
 
-**Quran Resume (Account)** is free, open-source software released under the MIT License (see `LICENSE`).
+**Quran Continue** is free, open-source software released under the MIT License (see `LICENSE`).
 
 - It is provided "as is", without warranty of any kind. Use it at your own risk.
 - It remembers the verse you were reading on quran.com and, if you sign in, keeps that place in your Quran.com

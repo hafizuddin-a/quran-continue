@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Quran Resume (Account)",
+  "name": "Quran Continue",
   "version": "0.1.0",
   "description": "Opens quran.com as a pinned tab at the verse where you last stopped, and keeps your place in sync through your Quran.com account.",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnBVQftUMVX4dtQ/hni2MFYCiQcH2XB/M4CjkJZNg2bcng3tMw4Nin2U1cIXi8ZUzId7FwUwofEU0M3rd/oFSBHekkHfzYTQwWTmW2EebJYc2L/hiTjhAUyvtHjD/Hxvn7FdZIdeI70EKYSyK0IkWPUCyjpXJXgQzBeNGSvMOFLnqZBhhzVHKXzS/Bzqlrlc38uNKd4E/ZQbaw+Mk3QbFBtQXhJdM4PBPw/AnNInZv1ppAgnZ4PRU0bAr175oZYc05AkksuoNzLfkKxgKbdslyfpg5XQzWFRvQi0ZxmdAn352aL4X5/QpRlcfzNoKZMCI8UsPgN19glrc5psPJN3vfwIDAQAB",
@@ -27,7 +27,7 @@
     { "matches": ["https://quran.com/*"], "js": ["content.js"], "run_at": "document_idle" }
   ],
   "action": {
-    "default_title": "Quran Resume (Account)",
+    "default_title": "Quran Continue",
     "default_icon": { "16": "icons/icon16.png", "32": "icons/icon32.png" },
     "default_popup": "popup.html"
   },

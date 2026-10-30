@@ -1,6 +1,6 @@
 # Privacy Policy
 
-**Quran Resume (Account)** does not collect, sell, or share personal data, and it has no server of its
+**Quran Continue** does not collect, sell, or share personal data, and it has no server of its
 own. It sends nothing over the network until you sign in with your Quran.com account.
 
 ## What the extension stores
@@ -43,4 +43,4 @@ It asks for permission to read and write your **reading sessions** (your "contin
 
 ## Contact
 
-Questions: open an issue at https://github.com/hafizuddin-a/quran-resume-account/issues
+Questions: open an issue at https://github.com/hafizuddin-a/quran-continue/issues
