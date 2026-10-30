@@ -50,3 +50,7 @@ input:focus-visible ~ .knob { outline: 2px solid var(--accent); outline-offset: 
 #phone-off, #phone-on { cursor: default; margin-top: 4px; }
 section .row + .row { margin-top: 10px; }
 #acct-off, #acct-on { cursor: default; margin-top: 4px; }
+#phone-head { cursor: default; margin-top: 4px; }
+.steps { margin: 0; padding-left: 18px; color: var(--muted); }
+.steps li { margin-bottom: 4px; }
+.qrrow { margin-top: 10px; }

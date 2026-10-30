@@ -103,6 +103,38 @@ $("signout").addEventListener("click", async () => {
   renderAccount(out);
 });
 
+// ---- On your phone ----
+// Draws the link as a QR code (dark squares on white, with the quiet border scanners need).
+function drawQr(canvas, text) {
+  const qr = qrcode(0, "M");
+  qr.addData(text);
+  qr.make();
+  const n = qr.getModuleCount();
+  const quiet = 2;
+  const dpr = window.devicePixelRatio || 1;
+  const cell = Math.max(1, Math.floor((104 * dpr) / (n + quiet * 2)));
+  const px = cell * (n + quiet * 2);
+  canvas.width = px;
+  canvas.height = px;
+  const ctx = canvas.getContext("2d");
+  ctx.fillStyle = "#fff";
+  ctx.fillRect(0, 0, px, px);
+  ctx.fillStyle = "#000";
+  for (let r = 0; r < n; r++) {
+    for (let c = 0; c < n; c++) {
+      if (qr.isDark(r, c)) ctx.fillRect((c + quiet) * cell, (r + quiet) * cell, cell, cell);
+    }
+  }
+}
+
+$("phone-toggle").addEventListener("click", () => {
+  const open = $("phone-steps").hidden;
+  $("phone-steps").hidden = !open;
+  $("phone-toggle").textContent = open ? "Hide steps" : "Show steps";
+  $("phone-toggle").setAttribute("aria-expanded", String(open));
+  if (open) drawQr($("qr"), "https://quran.com");
+});
+
 $("dev").addEventListener("click", () => {
   chrome.tabs.create({ url: INSTAGRAM_URL });
   window.close();

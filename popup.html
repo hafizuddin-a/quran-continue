@@ -65,11 +65,33 @@
 
   <hr>
 
+  <section id="phone">
+    <div class="label">On your phone</div>
+    <div class="row" id="phone-head">
+      <span>Read on your phone too<small>Open Quran.com there and sign in with the same account.</small></span>
+      <button class="secondary" id="phone-toggle" aria-expanded="false">Show steps</button>
+    </div>
+    <div id="phone-steps" hidden>
+      <div class="qrrow">
+        <canvas id="qr" width="104" height="104" aria-label="QR code for quran.com" role="img"></canvas>
+        <ol class="steps">
+          <li>Scan this code with your phone's camera to open quran.com.</li>
+          <li>Sign in with the same Quran.com account you use here.</li>
+          <li>Install it. iPhone: Share, then Add to Home Screen. Android: menu, then Install app.</li>
+        </ol>
+      </div>
+      <small class="note">Read from that app and your place follows you here, and the other way round.</small>
+    </div>
+  </section>
+
+  <hr>
+
   <button class="item" id="dev">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z" fill="currentColor"/></svg>
     <span>Talk to the developer<small>Sincerely, @madebyhafiz</small></span>
   </button>
   <script src="surahs.js"></script>
+  <script src="vendor/qrcode.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>
