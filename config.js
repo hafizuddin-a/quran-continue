@@ -1,10 +1,10 @@
 // Quran Foundation OAuth settings. The client is a public one (Authorization
 // Code + PKCE, no secret), so nothing here is confidential.
 //
-// 1. In the Quran Foundation Developer Console create a "Frontend or mobile app".
-// 2. Register this exact redirect URI (it is fixed by the "key" in manifest.json):
-//      https://hgcgipbcmganempbllnbfmefckmipgoc.chromiumapp.org/
-// 3. Paste the client id below. Use "prelive" while testing, "production" when live.
+// App: "Quran Resume Account" in the Quran Foundation Developer Console. Its redirect
+// URI is fixed by the "key" in manifest.json:
+//   https://hgcgipbcmganempbllnbfmefckmipgoc.chromiumapp.org/
+// Use "prelive" while testing and "production" once the permissions are approved.
 const QF = {
   env: "prelive", // "prelive" | "production"
   // Each environment has its own client id (public, not a secret).

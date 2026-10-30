@@ -1,8 +1,10 @@
 // Quran Resume (Account) - background service worker
 //
-// On browser startup: open (or reuse) a pinned quran.com tab at the last saved
-// verse and make it the active tab. Session restore may finish after this runs
-// and switch focus back to an old tab, so activation is retried a few times.
+// - Browser startup: open (or reuse) a pinned quran.com tab at the last saved
+//   verse and make it the active tab. Session restore may finish after this runs
+//   and switch focus back to an old tab, so activation is retried a few times.
+// - Once a day after the computer wakes: bring that tab forward.
+// - Quran.com account: keep the last verse in sync as a reading session (qf.js).
 
 importScripts("config.js", "qf.js");
 
@@ -18,7 +20,10 @@ const STARTUP_DELAY_MS = 2000;
 // it never fights you if you click another tab right after the browser starts.
 const ACTIVATE_AT_MS = [0, 1200];
 
+const PUSH_ALARM = "qr-push"; // fallback push if the worker is stopped before the 3 s timer fires
+
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const withTimeout = (promise, ms) => Promise.race([promise, sleep(ms).then(() => false)]);
 
 function urlForVerse(verseKey) {
   // verseKey looks like "2:255"
@@ -68,8 +73,6 @@ async function openQuran() {
   }
 }
 
-const SYNC_ALARM = "qr-sync-push"; // fallback push if the worker is stopped before the 3 s timer fires
-
 // ---- Quran.com account (optional, off until you sign in) ----
 //
 // Your place is stored as a Quran.com "reading session" (see qf.js), the same
@@ -80,13 +83,11 @@ const SYNC_ALARM = "qr-sync-push"; // fallback push if the worker is stopped bef
 // when you leave the quran.com tab), and a check when the browser starts, the
 // computer wakes, or you come back to the tab or open the menu.
 
-const withTimeout = (promise, ms) => Promise.race([promise, sleep(ms).then(() => false)]);
-
 async function setStatus(error) {
   await chrome.storage.local.set(error ? { qfError: error } : { qfLastSync: Date.now(), qfError: "" });
 }
 
-function describe(err) {
+function errorText(err) {
   if (err.status === 403) return "Quran.com refused the request (403). Check the approved scopes and allowed origins.";
   if (err.status === 401) return "Signed out. Please sign in again.";
   if (err.status === 429) return "Quran.com is busy. Will retry soon.";
@@ -96,16 +97,14 @@ function describe(err) {
 // Takes the account's place if it is newer, and moves any open quran.com tab to it.
 async function pullFromAccount() {
   const remote = await qfLatestPlace();
-  if (!remote) return false;
+  if (!remote) return;
   const { verseKey, savedAt = 0 } = await chrome.storage.local.get(["verseKey", "savedAt"]);
-  if (remote.verseKey === verseKey || remote.savedAt <= savedAt) return false;
-  // Mark it as already on the account first, so applying it doesn't push it straight back.
-  await chrome.storage.local.set({ qfLastPushed: remote.verseKey });
-  await chrome.storage.local.set({ verseKey: remote.verseKey, savedAt: remote.savedAt });
+  if (remote.verseKey === verseKey || remote.savedAt <= savedAt) return;
+  // Marked as already on the account, so applying it doesn't push it straight back.
+  await chrome.storage.local.set({ qfLastPushed: remote.verseKey, verseKey: remote.verseKey, savedAt: remote.savedAt });
   const url = urlForVerse(remote.verseKey);
   // Reading on in a tab left at the old place would save over the new one, so move it too.
   for (const tab of await chrome.tabs.query({ url: QURAN_MATCH })) chrome.tabs.update(tab.id, { url });
-  return true;
 }
 
 async function pushToAccount() {
@@ -125,7 +124,7 @@ function syncWithAccount() {
       await pushToAccount();
       await setStatus("");
     } catch (err) {
-      await setStatus(describe(err));
+      await setStatus(errorText(err));
     } finally {
       syncing = null;
     }
@@ -142,7 +141,7 @@ function pushSoon(ms = 3000) {
 chrome.storage.onChanged.addListener(async (changes, area) => {
   if (area === "local" && changes.verseKey) {
     pushSoon();
-    if (!(await chrome.alarms.get(SYNC_ALARM))) chrome.alarms.create(SYNC_ALARM, { delayInMinutes: 0.5 });
+    if (!(await chrome.alarms.get(PUSH_ALARM))) chrome.alarms.create(PUSH_ALARM, { delayInMinutes: 0.5 });
   }
 });
 
@@ -238,7 +237,7 @@ chrome.idle.onStateChanged.addListener(async (state) => {
 // Sleep without a lock screen: the 1-minute timer stops while the computer
 // sleeps, so a gap between ticks means it just woke up.
 chrome.alarms.onAlarm.addListener(async (alarm) => {
-  if (alarm.name === SYNC_ALARM) return syncWithAccount();
+  if (alarm.name === PUSH_ALARM) return syncWithAccount();
   if (alarm.name !== TICK_ALARM) return;
   const { lastTick } = await chrome.storage.local.get("lastTick");
   const now = Date.now();

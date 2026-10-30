@@ -1,8 +1,8 @@
 // Quran Foundation account: sign-in (Authorization Code + PKCE, public client)
 // and the Reading Sessions calls. Loaded by background.js through importScripts.
 //
-// This replaces the old phone server. quran.com and its mobile apps write the
-// same reading session, so signing in is all it takes to share your place.
+// quran.com and its mobile apps write the same reading session, so signing in
+// is all it takes to share your place. There is no server of our own.
 
 const QF_TOKENS = "qfTokens"; // { access, refresh, expiresAt }
 

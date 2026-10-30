@@ -23,4 +23,5 @@ place stays on this computer.
 - `qf.js` sign-in (Authorization Code + PKCE), token refresh, reading-session calls
 - `background.js` startup/wake/shortcut, account sync (newest wins)
 - `content.js` records the verse nearest the top of quran.com
+- `icons/icon.svg` icon source (quran.com-style teal, our calligraphy); `tools/render-icons.py` redraws the PNGs
 - `key.pem` private key behind the fixed extension id. Git-ignored; keep a backup.

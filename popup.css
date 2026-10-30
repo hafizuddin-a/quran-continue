@@ -14,7 +14,6 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 6px 0; }
 .sub { color: var(--muted); margin-top: 2px; }
 button { font: inherit; }
 .actions { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
-#phone .actions { margin-top: 0; }
 .hint { border: 0; background: none; color: var(--muted); font-size: 12px; cursor: pointer; padding: 4px 6px; border-radius: 6px; }
 .hint:hover { background: var(--hover); }
 /* Chrome's own button styles: filled for the main action, outlined for the rest. */
@@ -38,16 +37,12 @@ input:focus-visible ~ .knob { outline: 2px solid var(--accent); outline-offset: 
 .item:hover { background: var(--hover); }
 .item svg { width: 18px; height: 18px; color: var(--muted); }
 .item small { display: block; color: var(--muted); font-size: 12px; line-height: 16px; }
-.desc { margin: 2px 0 10px; color: var(--muted); }
 .note { display: block; color: var(--muted); font-size: 12px; line-height: 16px; margin-top: 8px; }
 .qrrow { display: flex; gap: 14px; align-items: flex-start; margin: 8px 0 2px; }
-.qrrow .desc { margin: 0 0 6px; }
-#qr { width: 104px; height: 104px; flex: none; border-radius: 6px; border: 1px solid var(--line); background: #fff; }
-.code { font-size: 20px; font-weight: 500; letter-spacing: 3px; font-variant-numeric: tabular-nums; }
+.qrrow #qr { width: 104px; height: 104px; flex: none; border-radius: 6px; border: 1px solid var(--line); background: #fff; }
 .msg { margin: 8px 0 0; color: var(--muted); font-size: 12px; line-height: 16px; }
 .primary:disabled { opacity: .6; cursor: default; }
 [hidden] { display: none !important; } /* .qrrow and .actions set display, which would override it */
-#phone-off, #phone-on { cursor: default; margin-top: 4px; }
 section .row + .row { margin-top: 10px; }
 #acct-off, #acct-on { cursor: default; margin-top: 4px; }
 #phone-head { cursor: default; margin-top: 4px; }
