@@ -4,7 +4,7 @@
 // quran.com and its mobile apps write the same reading session, so signing in
 // is all it takes to share your place. There is no server of our own.
 
-const QF_TOKENS = "qfTokens"; // { access, refresh, expiresAt }
+const QF_TOKENS = "qfTokens"; // { access, refresh, expiresAt, env }
 
 const b64url = (bytes) =>
   btoa(String.fromCharCode(...new Uint8Array(bytes))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
@@ -66,9 +66,15 @@ async function tokenRequest(params) {
   return body;
 }
 
+// Tokens from the other environment (prelive vs production) are useless here, so they count as signed out.
+async function storedTokens() {
+  const { [QF_TOKENS]: tokens } = await chrome.storage.local.get(QF_TOKENS);
+  return tokens && (tokens.env || "prelive") === QF.env ? tokens : null;
+}
+
 async function saveTokens(t) {
   await chrome.storage.local.set({
-    [QF_TOKENS]: { access: t.access_token, refresh: t.refresh_token, expiresAt: Date.now() + (t.expires_in || 3600) * 1000 },
+    [QF_TOKENS]: { access: t.access_token, refresh: t.refresh_token, expiresAt: Date.now() + (t.expires_in || 3600) * 1000, env: QF.env },
   });
 }
 
@@ -100,7 +106,7 @@ async function qfSignIn() {
 let refreshing = null;
 async function refreshAccess() {
   refreshing ||= (async () => {
-    const { [QF_TOKENS]: tokens } = await chrome.storage.local.get(QF_TOKENS);
+    const tokens = await storedTokens();
     if (!tokens || !tokens.refresh) throw Object.assign(new Error("Signed out"), { status: 401 });
     try {
       await saveTokens(await tokenRequest({ grant_type: "refresh_token", refresh_token: tokens.refresh }));
@@ -115,15 +121,15 @@ async function refreshAccess() {
 }
 
 async function accessToken() {
-  const { [QF_TOKENS]: tokens } = await chrome.storage.local.get(QF_TOKENS);
+  const tokens = await storedTokens();
   if (!tokens) return null;
   if (tokens.expiresAt - 60000 > Date.now()) return tokens.access;
   await refreshAccess();
-  return (await chrome.storage.local.get(QF_TOKENS))[QF_TOKENS].access;
+  return (await storedTokens()).access;
 }
 
 async function qfSignedIn() {
-  return !!(await chrome.storage.local.get(QF_TOKENS))[QF_TOKENS];
+  return !!(await storedTokens());
 }
 
 async function qfClear() {
@@ -131,7 +137,7 @@ async function qfClear() {
 }
 
 async function qfSignOut() {
-  const { [QF_TOKENS]: tokens } = await chrome.storage.local.get(QF_TOKENS);
+  const tokens = await storedTokens();
   if (tokens && tokens.refresh) {
     // Best effort: tell Quran Foundation to forget the refresh token.
     fetch(`${QF.authBase}/oauth2/revoke`, {

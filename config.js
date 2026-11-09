@@ -6,7 +6,7 @@
 //   https://hgcgipbcmganempbllnbfmefckmipgoc.chromiumapp.org/
 // Use "prelive" while testing and "production" once the permissions are approved.
 const QF = {
-  env: "prelive", // "prelive" | "production"
+  env: "production", // "prelive" | "production"
   // Each environment has its own client id (public, not a secret).
   clientIds: {
     prelive: "fcc4aa0c-ead8-42b4-a1c2-fea66199e93e",
