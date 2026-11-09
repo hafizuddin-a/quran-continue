@@ -85,11 +85,20 @@ function errorText(err) {
 }
 
 // Takes the account's place if it is newer, and moves any open quran.com tab to it.
+//
+// One exception: the Quran.com phone app re-uploads its own old place whenever it starts, so
+// an "update" that lands earlier in the same surah than where we are is treated as that stale
+// echo. We keep our place and write it back to the account instead.
 async function pullFromAccount() {
   const remote = await qfLatestPlace();
   if (!remote) return;
   const { verseKey, savedAt = 0 } = await chrome.storage.local.get(["verseKey", "savedAt"]);
   if (remote.verseKey === verseKey || remote.savedAt <= savedAt) return;
+  if (verseKey && isEarlierInSameSurah(remote.verseKey, verseKey)) {
+    await qfPushPlace(verseKey);
+    await chrome.storage.local.set({ qfLastPushed: verseKey });
+    return;
+  }
   // Marked as already on the account, so applying it doesn't push it straight back.
   await chrome.storage.local.set({ qfLastPushed: remote.verseKey, verseKey: remote.verseKey, savedAt: remote.savedAt });
   const url = urlForVerse(remote.verseKey);
