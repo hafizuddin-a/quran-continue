@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Quran Continue</title>
+  <meta name="theme-color" content="#247D83">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Continue">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon-192.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="stylesheet" href="launcher.css">
+</head>
+<body>
+  <main>
+    <img class="logo" src="icon-192.png" alt="" width="96" height="96">
+    <h1>Quran Continue</h1>
+
+    <section id="signed-out" hidden>
+      <p class="lead">Pick up where you stopped. Sign in with your Quran.com account once.</p>
+      <button class="primary" id="signin">Sign in with Quran.com</button>
+    </section>
+
+    <section id="signed-in" hidden>
+      <p class="label">Last stopped at</p>
+      <p class="verse" id="verse">&nbsp;</p>
+      <p class="sub" id="verse-sub"></p>
+      <a class="primary" id="go" href="https://quran.com">Continue reading</a>
+      <label class="row">
+        <span>Jump straight in when I open this</span>
+        <span class="toggle"><input type="checkbox" id="auto"><span class="track"></span><span class="knob"></span></span>
+      </label>
+      <button class="link" id="signout">Sign out</button>
+    </section>
+
+    <p class="msg" id="msg" hidden></p>
+  </main>
+  <script src="../surahs.js"></script>
+  <script src="../verse.js"></script>
+  <script src="launcher.js"></script>
+</body>
+</html>
