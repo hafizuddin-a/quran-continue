@@ -58,14 +58,17 @@ const qrIsCurrent = () => globalThis.__quranResumeInstance === QR_INSTANCE && !!
     return null;
   }
 
-  function save() {
+  async function save() {
     saveTimer = null;
     if (!armed || !qrIsCurrent()) return;
     const key = currentVerseFromDom() || currentVerseFromUrl();
     if (!key || key === lastSaved) return;
     lastSaved = key;
     try {
-      chrome.storage.local.set({ verseKey: key, savedAt: Date.now() });
+      // Only a verse that differs from the stored one is news. Re-saving the same verse would
+      // stamp it as newer and let a stale tab beat a place read since on another device.
+      const { verseKey } = await chrome.storage.local.get("verseKey");
+      if (key !== verseKey) await chrome.storage.local.set({ verseKey: key, savedAt: Date.now() });
     } catch (err) {
       // Extension was reloaded while this page was open; ignore.
     }
