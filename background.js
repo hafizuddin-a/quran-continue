@@ -97,6 +97,7 @@ async function pullFromAccount() {
   if (verseKey && isEarlierInSameSurah(remote.verseKey, verseKey)) {
     await qfPushPlace(verseKey);
     await chrome.storage.local.set({ qfLastPushed: verseKey });
+    await qfLatestPlace(); // refresh the "Recent places" list so it shows the repaired account
     return;
   }
   // Marked as already on the account, so applying it doesn't push it straight back.
