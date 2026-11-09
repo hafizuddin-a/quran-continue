@@ -76,6 +76,18 @@ function renderAccount(status) {
     $("acct-sub").textContent = status.lastSync ? `Last synced ${ago(status.lastSync)}` : "Not synced yet";
   }
   accountMessage(status && status.error ? status.error : "");
+  renderRecent();
+}
+
+// What the account holds right now: the newest few reading sessions, newest first.
+async function renderRecent() {
+  const { qfRecent = [] } = await chrome.storage.local.get("qfRecent");
+  $("recent").hidden = !qfRecent.length || $("acct-on").hidden;
+  $("recent-list").replaceChildren(...qfRecent.map((s) => {
+    const li = document.createElement("li");
+    li.textContent = `${s.verseKey} · ${ago(s.savedAt)}`;
+    return li;
+  }));
 }
 
 async function refreshAccount() {
@@ -151,6 +163,7 @@ chrome.storage.onChanged.addListener((changes, area) => {
     render();
     drawPhoneQr();
   }
+  if (area === "local" && changes.qfRecent) renderRecent();
 });
 
 render();

@@ -175,11 +175,14 @@ const qfPushPlace = (verseKey) => {
   return qfApi("/v1/reading-sessions", { method: "POST", body: JSON.stringify({ chapterNumber, verseNumber }) });
 };
 
-// The most recent place on the account, or null.
+// The most recent place on the account, or null. Also keeps the last few sessions
+// (qfRecent) so the menu can show what the account really holds.
 async function qfLatestPlace() {
-  const out = await qfApi("/v1/reading-sessions?first=1");
-  const s = out.data && out.data[0];
-  if (!s || !s.chapterNumber || !s.verseNumber) return null;
+  const out = await qfApi("/v1/reading-sessions?first=5");
   const { qfSkew = 0 } = await chrome.storage.local.get("qfSkew");
-  return { verseKey: `${s.chapterNumber}:${s.verseNumber}`, savedAt: Date.parse(s.updatedAt) - qfSkew };
+  const sessions = (out.data || [])
+    .filter((s) => s.chapterNumber && s.verseNumber)
+    .map((s) => ({ verseKey: `${s.chapterNumber}:${s.verseNumber}`, savedAt: Date.parse(s.updatedAt) - qfSkew }));
+  await chrome.storage.local.set({ qfRecent: sessions });
+  return sessions[0] || null;
 }
